@@ -9,23 +9,22 @@ public class Conexao {
     private static final String USER = "devuser";
     private static final String PASSWORD = "123456";
 
-    public static Connection conectar() throws ClassNotFoundException {
-        Connection con = null;
+    public static Connection conectar() {
         try {
-            // Carregar o driver JDBC
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            // Estabelecer a conexão com o banco de dados
-            con = DriverManager.getConnection(URL, USER, PASSWORD);
-            if (con != null) {
-                System.out.println("Conexão estabelecida com sucesso!");
-            } else {
-                System.out.println("Falha ao estabelecer conexão.");
-            }
-        } catch (SQLException ex) {
-            System.err.println("Erro ao conectar com o banco: " + ex.getMessage());
-            ex.printStackTrace(); // Adiciona a pilha de rastreamento
-            throw new RuntimeException("Erro ao conectar com o banco de dados", ex);
+            return DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (SQLException e) {
+            System.err.println("Erro ao conectar ao banco de dados: " + e.getMessage());
+            return null;
         }
-        return con;
+    }
+
+    public static void fechar(Connection con) {
+        if (con != null) {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                System.err.println("Erro ao fechar conexão: " + e.getMessage());
+            }
+        }
     }
 }
